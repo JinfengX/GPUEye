@@ -35,3 +35,5 @@ Pods/
 # Other
 *.log
 *.tmp
+Build/
+Release/
