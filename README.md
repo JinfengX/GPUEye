@@ -108,7 +108,16 @@ GPUEye/
 
 ## License
 
-© 2024 GPU Eye. All rights reserved.
+**Open Source - Free to Use**
+
+This project is released under the MIT License. You are free to:
+- Use, modify, and distribute this software
+- Include it in personal or commercial projects
+- Fork and contribute to the project
+
+## Contributing
+
+Contributions welcome! Feel free to fork, submit pull requests, or suggest improvements.
 
 ---
 
