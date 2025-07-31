@@ -232,7 +232,7 @@ struct ErrorStateView: View {
         GPU(index: 1, name: "RTX 4090", temperature: 68, powerUsage: 280, powerLimit: 450, memoryUsed: 12288, memoryTotal: 24576, gpuUtilization: 92, memoryUtilization: 50)
     ]
     
-    var hostStatus = HostStatus(host: sampleHost)
+    let hostStatus = HostStatus(host: sampleHost)
     hostStatus.gpus = sampleGPUs
     hostStatus.isConnected = true
     
