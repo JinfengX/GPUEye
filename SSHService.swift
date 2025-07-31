@@ -28,7 +28,11 @@ class SSHService {
                 "-p", "\(host.port)"
             ]
             
-            let connectionString = host.user != nil ? "\(host.user!)@\(host.hostname)" : host.hostname
+            let connectionString = if let user = host.user {
+                "\(user)@\(host.hostname)"
+            } else {
+                host.hostname
+            }
             arguments.append(connectionString)
             arguments.append(command)
             

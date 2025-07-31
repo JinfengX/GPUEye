@@ -223,7 +223,4 @@ class GPUMonitorService: ObservableObject {
         hostStatuses[index].objectWillChange.send()
         objectWillChange.send()
     }
-    
-
 }
-

@@ -10,5 +10,6 @@ struct GPUEyeApp: App {
         }
         .windowStyle(.titleBar)
         .windowToolbarStyle(.unified)
+        .defaultSize(width: 900, height: 600)
     }
 }
