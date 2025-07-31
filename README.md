@@ -1,9 +1,19 @@
 # GPUEye - A GPU Monitoring Application Written by AI
 
+<div align="center">
+  <img src="images/app_icon.png" alt="GPUEye Icon" width="128" height="128">
+</div>
+
 > [中文文档](README_CN.md) | English
 
 GPUEye is an AI-written macOS utility for real-time remote GPU monitoring.
 It connects to remote GPU servers via SSH and provides real-time monitoring of GPU status including temperature, utilization, memory usage, and power consumption.
+
+## Screenshot
+
+<div align="center">
+  <img src="images/screenshot.png" alt="GPUEye Screenshot" width="800">
+</div>
 
 ## Features
 
