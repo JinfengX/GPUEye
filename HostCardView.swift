@@ -221,10 +221,10 @@ struct ErrorStateView: View {
 
 #Preview {
     let sampleHost = Host(
-        name: "gpu-server-01",
-        hostname: "192.168.1.100",
+        name: "example-server",
+        hostname: "example.com",
         port: 22,
-        user: "admin"
+        user: "user"
     )
     
     let sampleGPUs = [
