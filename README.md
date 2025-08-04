@@ -19,6 +19,8 @@ It connects to remote GPU servers via SSH and provides real-time monitoring of G
 
 - **Real-time GPU Monitoring** - Temperature, utilization, memory, and power consumption
 - **SSH Connection Management** - Automatically reads SSH configuration for multiple hosts
+- **SSH ProxyJump Support** - Connect through jump servers to access internal GPU hosts
+- **Multi-Host Aliases** - Display all host aliases from SSH configuration
 - **Window Pinning** - Keep the application window always on top
 - **Adjustable Refresh Rate** - Support for 1s, 3s, 5s, 10s, 30s intervals
 - **Simplified Design** - Focus on stability and reliability
@@ -35,6 +37,7 @@ It connects to remote GPU servers via SSH and provides real-time monitoring of G
 
 Ensure your SSH config file `~/.ssh/config` contains the GPU hosts you want to monitor:
 
+#### Direct Connection
 ```ssh
 Host gpu-server-01
     HostName 192.168.1.100
@@ -45,6 +48,28 @@ Host gpu-server-02
     HostName 192.168.1.101
     User root
     Port 22
+```
+
+#### Through Jump Server (ProxyJump)
+```ssh
+# Jump server configuration (with multiple aliases)
+Host server1 jump-server
+    HostName 192.168.1.100
+    User admin
+    Port 22
+
+# GPU servers accessible through jump server
+Host gpu-server-01
+    HostName 10.0.0.50
+    User user1
+    Port 22
+    ProxyJump jump-server
+
+Host gpu-server-02
+    HostName 10.0.0.51
+    User user2
+    Port 22
+    ProxyJump jump-server
 ```
 
 ### 2. Build and Run
@@ -87,12 +112,18 @@ xcodebuild -project GPUEye.xcodeproj -scheme GPUEye -configuration Debug build
 ### Connection Failed
 1. Check SSH configuration and network connectivity
 2. Verify SSH key authentication is set up correctly
-3. Use the "Retry" button on host cards
+3. For jump server connections, ensure the jump server is accessible
+4. Use the "Retry" button on host cards
 
 ### No GPU Data
 1. Confirm nvidia-smi is installed on target hosts
 2. Check user permissions for executing nvidia-smi
 3. Verify the host actually has NVIDIA GPU devices
+
+### Jump Server Issues
+1. Test jump server connectivity manually: `ssh jump-server`
+2. Verify ProxyJump configuration in SSH config
+3. Check if the jump server can reach the target GPU hosts
 
 ## Technical Stack
 

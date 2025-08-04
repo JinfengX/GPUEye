@@ -19,6 +19,8 @@ GPUEye是一个由AI编写的macOS实用工具，用于远程GPU实时监控。
 
 - **实时GPU监控** - 温度、利用率、内存和功耗
 - **SSH连接管理** - 自动读取SSH配置文件以支持多主机
+- **SSH跳板机支持** - 通过跳板机连接内部GPU主机
+- **多主机别名显示** - 显示SSH配置中的所有主机别名
 - **窗口置顶** - 保持应用程序窗口始终在最前面
 - **可调刷新频率** - 支持1秒、3秒、5秒、10秒、30秒间隔
 - **简约设计** - 专注于稳定性和可靠性
@@ -35,6 +37,7 @@ GPUEye是一个由AI编写的macOS实用工具，用于远程GPU实时监控。
 
 确保您的SSH配置文件 `~/.ssh/config` 包含要监控的GPU主机：
 
+#### 直接连接
 ```ssh
 Host gpu-server-01
     HostName 192.168.1.100
@@ -45,6 +48,28 @@ Host gpu-server-02
     HostName 192.168.1.101
     User root
     Port 22
+```
+
+#### 通过跳板机连接 (ProxyJump)
+```ssh
+# 跳板机配置（支持多个别名）
+Host server1 jump-server
+    HostName 192.168.1.100
+    User admin
+    Port 22
+
+# 通过跳板机访问的GPU服务器
+Host gpu-server-01
+    HostName 10.0.0.50
+    User user1
+    Port 22
+    ProxyJump jump-server
+
+Host gpu-server-02
+    HostName 10.0.0.51
+    User user2
+    Port 22
+    ProxyJump jump-server
 ```
 
 ### 2. 构建和运行
@@ -87,12 +112,18 @@ xcodebuild -project GPUEye.xcodeproj -scheme GPUEye -configuration Debug build
 ### 连接失败
 1. 检查SSH配置和网络连接
 2. 确认SSH密钥认证设置正确
-3. 使用主机卡片上的"重试"按钮
+3. 对于跳板机连接，确保跳板机可访问
+4. 使用主机卡片上的"重试"按钮
 
 ### 无GPU数据
 1. 确认目标主机上已安装nvidia-smi
 2. 检查用户执行nvidia-smi的权限
 3. 确认主机确实有NVIDIA GPU设备
+
+### 跳板机问题
+1. 手动测试跳板机连接：`ssh jump-server`
+2. 验证SSH配置中的ProxyJump设置
+3. 检查跳板机是否能到达目标GPU主机
 
 ## 技术栈
 

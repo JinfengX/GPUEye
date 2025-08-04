@@ -24,9 +24,17 @@ class SSHService {
                 "-o", "ConnectTimeout=\(Int(AppConfig.connectionTimeout))",
                 "-o", "ServerAliveInterval=5",
                 "-o", "ServerAliveCountMax=3",
-                "-o", "StrictHostKeyChecking=no",
-                "-p", "\(host.port)"
+                "-o", "StrictHostKeyChecking=no"
             ]
+            
+            // 如果主机有跳板机配置，添加ProxyJump参数
+            if let proxyJump = host.proxyJump {
+                arguments.append("-J")
+                arguments.append(proxyJump)
+            }
+            
+            arguments.append("-p")
+            arguments.append("\(host.port)")
             
             let connectionString = if let user = host.user {
                 "\(user)@\(host.hostname)"
@@ -120,6 +128,8 @@ class SSHConfigReader: ObservableObject {
         var currentHostname: String?
         var currentPort = 22
         var currentUser: String?
+        var currentProxyJump: String?
+        var currentAliases: [String] = []
         
         let lines = content.components(separatedBy: .newlines)
         
@@ -146,16 +156,21 @@ class SSHConfigReader: ObservableObject {
                     name: currentHost,
                     hostname: currentHostname,
                     port: currentPort,
-                    user: currentUser
+                    user: currentUser,
+                    proxyJump: currentProxyJump,
+                    aliases: currentAliases
                 ) {
                     hosts.append(host)
                 }
                 
-                // 重置为新主机
-                currentHost = value
+                // 解析主机别名（可能包含多个）
+                let hostNames = components.dropFirst()
+                currentHost = hostNames.first
+                currentAliases = Array(hostNames.dropFirst())
                 currentHostname = nil
                 currentPort = 22
                 currentUser = nil
+                currentProxyJump = nil
                 
             case "hostname":
                 currentHostname = value
@@ -165,6 +180,9 @@ class SSHConfigReader: ObservableObject {
                 
             case "user":
                 currentUser = value
+                
+            case "proxyjump":
+                currentProxyJump = value
             
             default:
                 break
@@ -176,7 +194,9 @@ class SSHConfigReader: ObservableObject {
             name: currentHost,
             hostname: currentHostname,
             port: currentPort,
-            user: currentUser
+            user: currentUser,
+            proxyJump: currentProxyJump,
+            aliases: currentAliases
         ) {
             hosts.append(host)
         }
@@ -184,7 +204,7 @@ class SSHConfigReader: ObservableObject {
         return hosts
     }
     
-    private func createHost(name: String?, hostname: String?, port: Int, user: String?) -> Host? {
+    private func createHost(name: String?, hostname: String?, port: Int, user: String?, proxyJump: String?, aliases: [String]) -> Host? {
         guard let name = name,
               let hostname = hostname,
               !name.contains("*") && !name.contains("?") else {
@@ -195,7 +215,9 @@ class SSHConfigReader: ObservableObject {
             name: name,
             hostname: hostname,
             port: port,
-            user: user
+            user: user,
+            proxyJump: proxyJump,
+            aliases: aliases
         )
     }
 }

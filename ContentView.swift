@@ -221,9 +221,28 @@ struct HostRowView: View {
                 .font(.body)
                 .fontWeight(isSelected ? .semibold : .regular)
             
+            // 显示所有别名（如果有的话）
+            if !host.aliases.isEmpty {
+                Text("别名: \(host.aliases.joined(separator: ", "))")
+                    .font(.caption2)
+                    .foregroundColor(.secondary)
+            }
+            
             Text(host.connectionString)
                 .font(.caption)
                 .foregroundColor(.secondary)
+            
+            // 显示跳板机信息
+            if let proxyJump = host.proxyJump {
+                HStack(spacing: 4) {
+                    Image(systemName: "network")
+                        .font(.caption2)
+                        .foregroundColor(.blue)
+                    Text("跳板机: \(proxyJump)")
+                        .font(.caption2)
+                        .foregroundColor(.blue)
+                }
+            }
         }
         .padding(.vertical, 2)
     }

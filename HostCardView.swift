@@ -46,9 +46,28 @@ struct HostCardView: View {
                     .font(.title2)
                     .fontWeight(.semibold)
                 
+                // 显示所有别名（如果有的话）
+                if !hostStatus.host.aliases.isEmpty {
+                    Text("别名: \(hostStatus.host.aliases.joined(separator: ", "))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
                 Text(hostStatus.host.connectionString)
                     .font(.caption)
                     .foregroundColor(.secondary)
+                
+                // 显示跳板机信息
+                if let proxyJump = hostStatus.host.proxyJump {
+                    HStack(spacing: 4) {
+                        Image(systemName: "network")
+                            .font(.caption2)
+                            .foregroundColor(.blue)
+                        Text("跳板机: \(proxyJump)")
+                            .font(.caption2)
+                            .foregroundColor(.blue)
+                    }
+                }
             }
             
             Spacer()
@@ -224,7 +243,9 @@ struct ErrorStateView: View {
         name: "example-server",
         hostname: "example.com",
         port: 22,
-        user: "user"
+        user: "user",
+        proxyJump: nil,
+        aliases: ["server1", "prod-server"]
     )
     
     let sampleGPUs = [

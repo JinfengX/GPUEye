@@ -9,9 +9,17 @@ struct Host: Identifiable, Hashable {
     let hostname: String
     let port: Int
     let user: String?
+    let proxyJump: String?
+    let aliases: [String] // 支持多个别名
     
     var displayName: String {
         name.isEmpty ? hostname : name
+    }
+    
+    var allNames: String {
+        var names = [name]
+        names.append(contentsOf: aliases)
+        return names.filter { !$0.isEmpty }.joined(separator: ", ")
     }
     
     var connectionString: String {
@@ -22,6 +30,9 @@ struct Host: Identifiable, Hashable {
         result += hostname
         if port != 22 {
             result += ":\(port)"
+        }
+        if let proxyJump = proxyJump {
+            result += " (via \(proxyJump))"
         }
         return result
     }

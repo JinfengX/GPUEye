@@ -37,3 +37,7 @@ Pods/
 *.tmp
 Build/
 Release/
+
+# Build tools and releases
+build-tools/
+releases/
